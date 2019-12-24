@@ -14,7 +14,8 @@
         },
         "USER_RULE": {
             "description": "自定义规则(不需要可以为空，格式参看： https://github.com/JinnLynn/genpac/blob/master/sample/user-rules.txt)",
-            "value": "@@sina.com\n@@163.com\ntwitter.com\nyoutube.com\n||google.com\n||wikipedia.org"
+            "value": "@@sina.com\n@@163.com\ntwitter.com\nyoutube.com\n||google.com\n||wikipedia.org",
+            "required": false
         }
     },
     "website": "https://github.com/ygcaicn/autopac-heroku",
