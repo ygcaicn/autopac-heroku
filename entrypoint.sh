@@ -11,12 +11,12 @@ fi
 echo ${PAC_PROXY}
 
 if [[ -z "${USER_RULE}" ]]; then
-  PAC_PROXY="SOCKS5 127.0.0.1:1080"
+  USER_RULE="SOCKS5 127.0.0.1:1080"
 fi
-echo -e ${PAC_PROXY}
+echo -e ${USER_RULE}
 
 cat <<-EOF > /user-rules.txt
-${PAC_PROXY}
+${USER_RULE}
 EOF
 cat /user-rules.txt
 
@@ -36,11 +36,11 @@ tar xvf wwwroot.tar.gz
 rm -rf wwwroot.tar.gz
 mkdir -p "/wwwroot/${PAC_PATH}"
 
-genpac --format=pac --pac-proxy="${PAC_PROXY}" > "/wwwroot/${PAC_PATH}/index.txt"
+genpac --format=pac --pac-proxy="${PAC_PROXY}" --user-rule-from /user-rules.txt > "/wwwroot/${PAC_PATH}/index.txt"
 
 cat <<-EOF > /genpac.sh
 #! /bin/bash
-genpac --format=pac --pac-proxy="${PAC_PROXY}" > "/wwwroot/${PAC_PATH}/index.txt"
+genpac --format=pac --pac-proxy="${PAC_PROXY}" --user-rule-from /user-rules.txt > "/wwwroot/${PAC_PATH}/index.txt"
 EOF
 echo "0 0 * * * bash /genpac.sh" > /etc/crontabs/root
 
