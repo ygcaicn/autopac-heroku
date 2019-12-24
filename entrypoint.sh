@@ -10,6 +10,22 @@ if [[ -z "${PAC_PROXY}" ]]; then
 fi
 echo ${PAC_PROXY}
 
+cat <<-EOF > /user-rules.txt
+${USER_RULE}
+EOF
+echo "user-rules"
+cat /user-rules.txt
+
+
+C_VER=`wget -qO- "https://api.github.com/repos/mholt/caddy/releases/latest" | grep 'tag_name' | cut -d\" -f4`
+mkdir /caddybin
+cd /caddybin
+CADDY_URL="https://github.com/mholt/caddy/releases/download/$C_VER/caddy_${C_VER}_linux_amd64.tar.gz"
+echo ${CADDY_URL}
+wget --no-check-certificate -qO 'caddy.tar.gz' ${CADDY_URL}
+tar xvf caddy.tar.gz
+rm -rf caddy.tar.gz
+chmod +x caddy
 
 cd /wwwroot
 tar xvf wwwroot.tar.gz
@@ -23,32 +39,11 @@ EOF
 chmod +x /pac/update_gfwlist.sh
 /pac/update_gfwlist.sh
 echo "0 0 * * * bash /pac/update_gfwlist.sh" > /etc/crontabs/root
+genpac --format=pac --pac-proxy="${PAC_PROXY}" --user-rule-from /user-rules.txt > "/wwwroot/${PAC_PATH}/index.txt"
 
 cat <<-EOF > /pac/cgi.sh
 #! /bin/bash
-
-printf "Content-type: text/plain\n\n"
-
-eval \`/proccgi.sh $*\`
-if [[ -n "\${FORM_u}" ]]; then
-  USER_RULE_opt="--user-rule="\${FORM_u}""
-fi
-
-PAC_PROXY="${PAC_PROXY}"
-if [[ -n "\${FORM_pac_proxy}" ]]; then
-  PAC_PROXY="SOCKS5 \${FORM_pac_proxy}"
-fi
-
-if ! [[ -e "/pac/gfwlist.txt" ]]; then
-  echo /pac/gfwlist.txt Not found！
-  exit 404
-fi
-
-echo "\$(genpac --format=pac --pac-proxy="\${PAC_PROXY}" \
-      \${USER_RULE_opt} \
-      --gfwlist-url=- \
-      --gfwlist-local=/pac/gfwlist.txt)"
-exit 0
+genpac --format=pac --pac-proxy="${PAC_PROXY}" --user-rule-from /user-rules.txt > "/wwwroot/${PAC_PATH}/index.txt"
 EOF
 
 chmod +x /pac/cgi.sh
