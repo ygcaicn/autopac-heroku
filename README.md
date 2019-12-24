@@ -25,16 +25,18 @@
 
 配合插件[proxy-switcher](https://extensions.gnome.org/extension/771/proxy-switcher/)食用效果更佳！
 
+Windows、Mac类似。
+
 ![conf](img/conf.png)
 
 ## 3. 为什么需要？
 
 1. 使用SwitchyOmega进行分流，虽然sockets5支持远程DNS解析，抓包发现还是会向本地DNS发送请求，会导致很多问题。
 ![wire](img/wireshark.png)
-   
+
 2. 由于Chrome移除对file://和data:协议的支持, 使用本地设置file://path/to/your/pac Chrome无法正常使用。
 
-3. 自动更新（每天自动更新到最新）。 
+3. 自动更新（每天自动更新到最新）。
 
 ## 4. 公共使用
 
@@ -44,10 +46,8 @@
 
 https://perl1024.herokuapp.com/autoproxy.pac
 
-
-# 致谢
+## 致谢
 
 https://github.com/JinnLynn/genpac
 
 https://github.com/gfwlist/gfwlist
-
