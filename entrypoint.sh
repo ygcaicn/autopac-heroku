@@ -10,6 +10,17 @@ if [[ -z "${PAC_PROXY}" ]]; then
 fi
 echo ${PAC_PROXY}
 
+if [[ -z "${USER_RULE}" ]]; then
+  PAC_PROXY="SOCKS5 127.0.0.1:1080"
+fi
+echo -e ${PAC_PROXY}
+
+cat <<-EOF > /user-rules.txt
+${PAC_PROXY}
+EOF
+cat /user-rules.txt
+
+
 C_VER=`wget -qO- "https://api.github.com/repos/mholt/caddy/releases/latest" | grep 'tag_name' | cut -d\" -f4`
 mkdir /caddybin
 cd /caddybin
