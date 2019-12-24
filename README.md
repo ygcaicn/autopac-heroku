@@ -18,6 +18,11 @@
 ## 2. 系统设置
 
 以Ubuntu系统为例，点击系统设置->网络->代理设置->自动，在输入框中输入https://test.herokuapp.com/autoproxy.pac 。
+
+配置后浏览器不需要使用SwitchyOmega再进行配置。
+
+配合插件[proxy-switcher](https://extensions.gnome.org/extension/771/proxy-switcher/)食用效果更佳！
+
 ![conf](img/conf.png)
 
 ## 3. 为什么需要？
