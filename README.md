@@ -34,6 +34,13 @@
 
 3. 自动更新。 
 
+## 4. 公共使用
+
+本地代理： SOCKS5 127.0.0.1:1081
+
+尽量还是自己部署一个，herokuapp限制时长。
+
+https://perl1024.herokuapp.com/autoproxy.pac
 
 
 # 致谢
