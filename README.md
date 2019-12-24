@@ -21,7 +21,7 @@
 
 以Ubuntu系统为例，点击系统设置->网络->代理设置->自动，在输入框中输入https://test.herokuapp.com/autoproxy.pac 。
 
-配置后浏览器不需要使用SwitchyOmega再进行配置。
+配置后浏览器不需要使用SwitchyOmega再进行配置, 可以打开[ip111.cn](http://ip111.cn)验证pac是否生效。
 
 配合插件[proxy-switcher](https://extensions.gnome.org/extension/771/proxy-switcher/)食用效果更佳！
 
