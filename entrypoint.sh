@@ -12,6 +12,7 @@ echo ${PAC_PROXY}
 
 echo -e ${USER_RULE}
 
+mkdir -p /pac
 cat <<-EOF > /pac/user-rules.txt
 ${USER_RULE}
 EOF
@@ -22,7 +23,7 @@ cd /wwwroot
 tar xvf wwwroot.tar.gz
 rm -rf wwwroot.tar.gz
 
-mkdir -p /pac
+
 cat <<-EOF > /pac/update_gfwlist.sh
 #! /bin/bash
 curl -o /pac/gfwlist.txt -L https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt
