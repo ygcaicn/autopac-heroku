@@ -10,6 +10,13 @@ if [[ -z "${PAC_PROXY}" ]]; then
 fi
 echo ${PAC_PROXY}
 
+echo -e ${USER_RULE}
+
+cat <<-EOF > /pac/user-rules.txt
+${USER_RULE}
+EOF
+cat /pac/user-rules.txt
+
 
 cd /wwwroot
 tar xvf wwwroot.tar.gz
@@ -47,6 +54,7 @@ fi
 echo "\$(genpac --format=pac --pac-proxy="\${PAC_PROXY}" \
       \${USER_RULE_opt} \
       --gfwlist-url=- \
+      --user-rule-from /user-rules.txt \
       --gfwlist-local=/pac/gfwlist.txt)"
 exit 0
 EOF

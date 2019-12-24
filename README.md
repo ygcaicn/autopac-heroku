@@ -42,11 +42,11 @@ Windows、Mac类似。
 
 ## 4. 公共使用
 
-默认本地代理： SOCKS5 127.0.0.1:1081,可以添加get参数修改端口。
+默认本地代理： SOCKS5 127.0.0.1:1080,可以添加get参数修改端口。
 
 尽量还是自己部署一个，herokuapp限制时长。
 
-https://perl1024.herokuapp.com/autoproxy.pac
+https://perl2048.herokuapp.com/autoproxy.pac
 
 ## 致谢
 
