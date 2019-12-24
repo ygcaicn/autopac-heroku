@@ -2,7 +2,6 @@ FROM alpine:latest
 
 COPY wwwroot.tar.gz /wwwroot/wwwroot.tar.gz
 COPY entrypoint.sh /entrypoint.sh
-COPY proccgi.sh /proccgi.sh
 
 RUN apk update \
         && apk upgrade \
