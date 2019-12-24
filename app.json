@@ -17,7 +17,7 @@
             "value": "@@sina.com\n@@163.com\ntwitter.com\nyoutube.com\n||google.com\n||wikipedia.org"
         }
     },
-    "website": "",
-    "repository": "",
+    "website": "https://github.com/ygcaicn/autopac-heroku",
+    "repository": "https://github.com/ygcaicn/autopac-heroku",
     "stack": "container"
 }
