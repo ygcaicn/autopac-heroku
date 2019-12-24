@@ -1,0 +1,19 @@
+{
+    "name": "Autoproxy.pac",
+    "description": "Deploy pac to Heroku.",
+    "keywords": ["autopac"],
+    "env": {
+        "PAC_PROXY": {
+            "description": "本地代理路径",
+            "value": "SOCKS5 127.0.0.1:1080"
+        },
+
+        "PAC_PATH": {
+            "description": "URL(可以设置的复杂，以保证私密性)",
+            "value": "/autoproxy.pac"
+        }
+    },
+    "website": "",
+    "repository": "",
+    "stack": "container"
+}
