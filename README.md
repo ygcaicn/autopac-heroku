@@ -1,5 +1,7 @@
 # 一键Autoproxy.pac快速部署到Heroku
 
+自动根据gfwlist生成Autoproxy.pac
+
 点击下面按钮部署：
 
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
