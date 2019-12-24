@@ -10,14 +10,10 @@ if [[ -z "${PAC_PROXY}" ]]; then
 fi
 echo ${PAC_PROXY}
 
-if [[ -z "${USER_RULE}" ]]; then
-  USER_RULE="SOCKS5 127.0.0.1:1080"
-fi
-echo -e ${USER_RULE}
-
 cat <<-EOF > /user-rules.txt
 ${USER_RULE}
 EOF
+echo "user-rules"
 cat /user-rules.txt
 
 
