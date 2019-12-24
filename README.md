@@ -21,6 +21,8 @@
 
 以Ubuntu系统为例，点击系统设置->网络->代理设置->自动，在输入框中输入https://test.herokuapp.com/autoproxy.pac 。
 
+可以添加get参数指定代理端口，以及添加user-rule（多个域名使用逗号分隔，@@开头的表示不使用代理），https://test.herokuapp.com/autoproxy.pac?pac_proxy=127.0.0.1:1082&u=google.com,ipip.net,@@taobao.com
+
 配置后浏览器不需要使用SwitchyOmega再进行配置, 可以打开[ip111.cn](http://ip111.cn)验证pac是否生效。
 
 配合插件[proxy-switcher](https://extensions.gnome.org/extension/771/proxy-switcher/)食用效果更佳！
@@ -40,7 +42,7 @@ Windows、Mac类似。
 
 ## 4. 公共使用
 
-本地代理： SOCKS5 127.0.0.1:1081
+默认本地代理： SOCKS5 127.0.0.1:1081,可以添加get参数修改端口。
 
 尽量还是自己部署一个，herokuapp限制时长。
 
