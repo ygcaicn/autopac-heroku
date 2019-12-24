@@ -4,7 +4,7 @@
     "keywords": ["autopac"],
     "env": {
         "PAC_PROXY": {
-            "description": "本地代理路径",
+            "description": "本地代理路径,你ss客户端运行在多少端口就写多少",
             "value": "SOCKS5 127.0.0.1:1080"
         },
 
