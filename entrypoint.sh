@@ -54,7 +54,7 @@ fi
 echo "\$(genpac --format=pac --pac-proxy="\${PAC_PROXY}" \
       \${USER_RULE_opt} \
       --gfwlist-url=- \
-      --user-rule-from /user-rules.txt \
+      --user-rule-from /pac/user-rules.txt \
       --gfwlist-local=/pac/gfwlist.txt)"
 exit 0
 EOF
