@@ -33,12 +33,14 @@ old_hash=\$(cat "/pac/gfwlist.txt" | sha256sum | awk '{print \$1}')
 new_hash=\$(cat "/pac/gfwlist.txt.tmp" | sha256sum | awk '{print \$1}')
 if [[ "\${old_hash}" == "\${new_hash}" ]]; then
   rm -rf /pac/gfwlist.txt.tmp
+  sed -i -r -e "s/(Check:).*/\1 \$(date)/g" /pac/gfwlist.txt
 else
   rm -rf /pac/cache/*
   mv /pac/gfwlist.txt.tmp /pac/gfwlist.txt
   echo "/**" > /pac/update.log
   echo " * repository: https://github.com/ygcaicn/autopac-heroku" >> /pac/update.log
-  echo " * /pac/gfwlist.txt Update: \$(date)" >> /pac/update.log
+  echo " * /pac/gfwlist.txt Last-Modified: \$(date)" >> /pac/update.log
+  echo " * /pac/gfwlist.txt Check: \$(date)" >> /pac/update.log
   echo "*/" >> /pac/update.log
   echo "" >> /pac/update.log
 fi
