@@ -12,7 +12,8 @@ echo ${PAC_PROXY}
 
 echo -e ${USER_RULE}
 
-mkdir -p /pac
+mkdir -p /pac/cache
+
 cat <<-EOF > /pac/user-rules.txt
 ${USER_RULE}
 EOF
@@ -26,14 +27,51 @@ rm -rf wwwroot.tar.gz
 
 cat <<-EOF > /pac/update_gfwlist.sh
 #! /bin/bash
-curl -o /pac/gfwlist.txt -L https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt
+curl -o /pac/gfwlist.txt.tmp -L https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt
+if ! [[ -e pac/gfwlist.txt ]]; then
+  mv /pac/gfwlist.txt.tmp /pac/gfwlist.txt
+else
+  old_hash=\$(echo "/pac/gfwlist.txt" | sha256sum | awk '{print \$1}')
+  new_hash=\$(echo "/pac/gfwlist.txt.tmp" | sha256sum | awk '{print \$1}')
+  if [[ "\${old_hash}" == "\${new_hash}" ]]; then
+    rm -rf /pac/gfwlist.txt.tmp
+  else
+    rm -rf /pac/cache/*
+    mv /pac/gfwlist.txt.tmp /pac/gfwlist.txt
+  fi
+fi
 EOF
+
 chmod +x /pac/update_gfwlist.sh
 /pac/update_gfwlist.sh
 echo "0 0 * * * bash /pac/update_gfwlist.sh" > /etc/crontabs/root
 
 cat <<-EOF > /pac/cgi.sh
 #! /bin/bash
+clean_cache(){
+  MAX_SIZE=20000 #KB
+  MAX_FILES=100
+  MAX_TIME=10 #Days
+  pushd \$1
+  size=\$(du -s \$1 |awk '{print \$1}')
+  if [[ \$size -gt \${MAX_SIZE} ]]; then
+    until [ \$size -lt \${MAX_SIZE} ];
+    do
+      rm -rf \$(ls -rt | head -n1) ;
+      size=\$(du -s \$1 |awk '{print $1}') ;
+    done
+  fi
+
+  if [ \$(ls -1t | wc -l) -gt \${MAX_FILES} ]; then
+      let del_num=\$(ls -1t | wc -l)-MAX_FILES
+      rm -r \$(ls -rt | head -n \${del_num})
+  fi
+
+  find . -type f -mtime +\${MAX_TIME} -exec rm -rf {} \;
+
+  popd
+  return 0
+}
 
 printf "Content-type: text/plain\n\n"
 
@@ -52,11 +90,22 @@ if ! [[ -e "/pac/gfwlist.txt" ]]; then
   exit 404
 fi
 
-echo "\$(genpac --format=pac --pac-proxy="\${PAC_PROXY}" \
-      \${USER_RULE_opt} \
-      --gfwlist-url=- \
-      --user-rule-from /pac/user-rules.txt \
-      --gfwlist-local=/pac/gfwlist.txt)"
+req_hash=\$(echo "\${FORM_u}&\${FORM_pac_proxy}" | sha256sum | awk '{print \$1}')
+if ! [[ -e "/pac/cache/\${req_hash}" ]]; then
+  clean_cache /pac/cache > /dev/null 2>&1
+  echo "\$(genpac --format=pac --pac-proxy="\${PAC_PROXY}" \
+        \${USER_RULE_opt} \
+        --gfwlist-url=- \
+        --user-rule-from /pac/user-rules.txt \
+        --gfwlist-local=/pac/gfwlist.txt)" \
+        > /pac/cache/\${req_hash}
+  
+fi
+
+if [[ -e "/pac/cache/\${req_hash}" ]]; then
+  cat /pac/cache/\${req_hash}
+fi
+
 exit 0
 EOF
 
