@@ -95,6 +95,7 @@ update_gfwlist(){
 
 printf "Content-type: text/plain\n\n"
 
+eval \`/proccgi.sh \$*\`
 if [[ -n "\${FORM_u}" ]]; then
   USER_RULE_opt="--user-rule="\${FORM_u}""
 fi
