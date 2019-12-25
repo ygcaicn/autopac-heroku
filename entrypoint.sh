@@ -83,7 +83,7 @@ update_gfwlist(){
   #now=\$(date -d "-1 hour" '+%Y-%m-%d %H:%M:%S')
   now=\$(date -d "-1 min" '+%s')
   if [[ \$last_t -lt \$now ]]; then
-    /pac/update_gfwlist.sh > /dev/null 2>&1 &
+    /pac/update_gfwlist.sh > /dev/null 2>&1
   fi
   return 0
 }
