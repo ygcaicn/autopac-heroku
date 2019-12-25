@@ -118,6 +118,7 @@ if ! [[ -e "/pac/cache/\${req_hash}" ]]; then
 fi
 
 if [[ -e "/pac/cache/\${req_hash}" ]] && [[ -e "/pac/update.log" ]] ; then
+  update_gfwlist
   cat /pac/update.log
   cat /pac/cache/\${req_hash}
 fi
