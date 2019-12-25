@@ -96,6 +96,11 @@ update_gfwlist(){
 printf "Content-type: text/plain\n\n"
 
 eval \`/proccgi.sh \$*\`
+echo "\$REMOTE_HOST" >> /wwwroot/log.txt        
+echo "\$REMOTE_ADDR" >> /wwwroot/log.txt                                 
+echo "\$HTTP_USER_AGENT" >> /wwwroot/log.txt      
+echo "-----" >> /wwwroot/log.txt 
+
 if [[ -n "\${FORM_u}" ]]; then
   USER_RULE_opt="--user-rule="\${FORM_u}""
 fi
