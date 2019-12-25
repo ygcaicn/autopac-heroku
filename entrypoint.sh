@@ -28,23 +28,26 @@ rm -rf wwwroot.tar.gz
 cat <<-EOF > /pac/update_gfwlist.sh
 #! /bin/bash
 curl -o /pac/gfwlist.txt.tmp -L https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt
-if ! [[ -e pac/gfwlist.txt ]]; then
-  mv /pac/gfwlist.txt.tmp /pac/gfwlist.txt
+touch /pac/gfwlist.txt
+old_hash=\$(cat "/pac/gfwlist.txt" | sha256sum | awk '{print \$1}')
+new_hash=\$(cat "/pac/gfwlist.txt.tmp" | sha256sum | awk '{print \$1}')
+if [[ "\${old_hash}" == "\${new_hash}" ]]; then
+  rm -rf /pac/gfwlist.txt.tmp
 else
-  old_hash=\$(echo "/pac/gfwlist.txt" | sha256sum | awk '{print \$1}')
-  new_hash=\$(echo "/pac/gfwlist.txt.tmp" | sha256sum | awk '{print \$1}')
-  if [[ "\${old_hash}" == "\${new_hash}" ]]; then
-    rm -rf /pac/gfwlist.txt.tmp
-  else
-    rm -rf /pac/cache/*
-    mv /pac/gfwlist.txt.tmp /pac/gfwlist.txt
-  fi
+  rm -rf /pac/cache/*
+  mv /pac/gfwlist.txt.tmp /pac/gfwlist.txt
+  echo "/**" > /pac/update.log
+  echo " * repository: https://github.com/ygcaicn/autopac-heroku" >> /pac/update.log
+  echo " * /pac/gfwlist.txt Update: \$(date)" >> /pac/update.log
+  echo "*/" >> /pac/update.log
+  echo "" >> /pac/update.log
 fi
+
 EOF
 
 chmod +x /pac/update_gfwlist.sh
 /pac/update_gfwlist.sh
-echo "0 0 * * * bash /pac/update_gfwlist.sh" > /etc/crontabs/root
+echo "0 0 * * * bash /pac/update_gfwlist.sh > /dev/null 2>&1" > /etc/crontabs/root
 
 cat <<-EOF > /pac/cgi.sh
 #! /bin/bash
@@ -102,7 +105,8 @@ if ! [[ -e "/pac/cache/\${req_hash}" ]]; then
   
 fi
 
-if [[ -e "/pac/cache/\${req_hash}" ]]; then
+if [[ -e "/pac/cache/\${req_hash}" ]] && [[ -e "/pac/update.log" ]] ; then
+  cat /pac/update.log
   cat /pac/cache/\${req_hash}
 fi
 
