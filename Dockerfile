@@ -8,6 +8,7 @@ RUN apk update \
         && apk add --no-cache bash \
         && apk add --no-cache python3 \
         && apk add --no-cache curl \
+        && apk add --no-cache coreutils \
         && pip3 install --upgrade pip \
         && pip install -U genpac \
         && rm -rf /var/cache/apk/* \

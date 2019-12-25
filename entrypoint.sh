@@ -33,14 +33,14 @@ old_hash=\$(cat "/pac/gfwlist.txt" | sha256sum | awk '{print \$1}')
 new_hash=\$(cat "/pac/gfwlist.txt.tmp" | sha256sum | awk '{print \$1}')
 if [[ "\${old_hash}" == "\${new_hash}" ]]; then
   rm -rf /pac/gfwlist.txt.tmp
-  sed -i -r -e "s/(Check:).*/\1 \$(date)/g" /pac/gfwlist.txt
+  sed -i -r -e "s/(Check:).*/\1 \$(date '+%Y-%m-%d %H:%M:%S')/g" /pac/update.log
 else
   rm -rf /pac/cache/*
   mv /pac/gfwlist.txt.tmp /pac/gfwlist.txt
   echo "/**" > /pac/update.log
   echo " * repository: https://github.com/ygcaicn/autopac-heroku" >> /pac/update.log
-  echo " * /pac/gfwlist.txt Last-Modified: \$(date)" >> /pac/update.log
-  echo " * /pac/gfwlist.txt Check: \$(date)" >> /pac/update.log
+  echo " * /pac/gfwlist.txt Last-Modified: \$(date '+%Y-%m-%d %H:%M:%S')" >> /pac/update.log
+  echo " * /pac/gfwlist.txt Check: \$(date '+%Y-%m-%d %H:%M:%S')" >> /pac/update.log
   echo "*/" >> /pac/update.log
   echo "" >> /pac/update.log
 fi
@@ -49,7 +49,7 @@ EOF
 
 chmod +x /pac/update_gfwlist.sh
 /pac/update_gfwlist.sh
-echo "* * * * * bash /pac/update_gfwlist.sh > /dev/null 2>&1" >> /etc/crontabs/root
+#echo "* * * * * bash /pac/update_gfwlist.sh > /dev/null 2>&1" >> /etc/crontabs/root
 
 cat <<-EOF > /pac/cgi.sh
 #! /bin/bash
@@ -75,6 +75,16 @@ clean_cache(){
   find . -type f -mtime +\${MAX_TIME} -exec rm -rf {} \;
 
   popd
+  return 0
+}
+update_gfwlist(){
+  last=$(cat update.log | grep Check | grep -o -E [0-9]+-[0-9]+-.*)
+  last_t=$(date -d "$last" +%s)
+  #now=$(date -d "-1 hour" '+%Y-%m-%d %H:%M:%S')
+  now=$(date -d "-1 min" '+%s')
+  if [[ $last_t -lt $now ]]; then
+    /pac/update_gfwlist.sh > /dev/null 2>&1 &
+  fi
   return 0
 }
 
@@ -132,7 +142,7 @@ http://0.0.0.0:${PORT}
 }
 EOF
 
-crond
+#crond
 
 
 caddy -conf="/Caddyfile"
