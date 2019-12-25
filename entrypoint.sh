@@ -39,7 +39,7 @@ if [[ "\${old_hash}" == "\${new_hash}" ]]; then
   sed -i -r -e "s/(Check:).*/\1 \$(date '+%Y-%m-%d %H:%M:%S')/g" /pac/update.log
 else
   rm -rf /pac/cache/*
-  if [[ $(du -s /pac/gfwlist.txt.tmp | awk '{print $1}') -gt 150 ]]; then
+  if [[ \$(du -s /pac/gfwlist.txt.tmp | awk '{print \$1}') -gt 150 ]]; then
     cat /pac/gfwlist.txt.tmp > /pac/gfwlist.txt
     echo "/**" > /pac/update.log
     echo " * repository: https://github.com/ygcaicn/autopac-heroku" >> /pac/update.log
