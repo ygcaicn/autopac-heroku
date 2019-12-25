@@ -39,13 +39,15 @@ if [[ "\${old_hash}" == "\${new_hash}" ]]; then
   sed -i -r -e "s/(Check:).*/\1 \$(date '+%Y-%m-%d %H:%M:%S')/g" /pac/update.log
 else
   rm -rf /pac/cache/*
-  cat /pac/gfwlist.txt.tmp > /pac/gfwlist.txt
-  echo "/**" > /pac/update.log
-  echo " * repository: https://github.com/ygcaicn/autopac-heroku" >> /pac/update.log
-  echo " * /pac/gfwlist.txt Last-Modified: \$(date '+%Y-%m-%d %H:%M:%S')" >> /pac/update.log
-  echo " * /pac/gfwlist.txt Check: \$(date '+%Y-%m-%d %H:%M:%S')" >> /pac/update.log
-  echo "*/" >> /pac/update.log
-  echo "" >> /pac/update.log
+  if [[ $(du -s /pac/gfwlist.txt.tmp | awk '{print $1}') -gt 150 ]]; then
+    cat /pac/gfwlist.txt.tmp > /pac/gfwlist.txt
+    echo "/**" > /pac/update.log
+    echo " * repository: https://github.com/ygcaicn/autopac-heroku" >> /pac/update.log
+    echo " * /pac/gfwlist.txt Last-Modified: \$(date '+%Y-%m-%d %H:%M:%S')" >> /pac/update.log
+    echo " * /pac/gfwlist.txt Check: \$(date '+%Y-%m-%d %H:%M:%S')" >> /pac/update.log
+    echo "*/" >> /pac/update.log
+    echo "" >> /pac/update.log
+  fi
 fi
 rm -rf /pac/gfwlist.txt.tmp
 EOF
@@ -83,8 +85,8 @@ clean_cache(){
 update_gfwlist(){
   last=\$(cat /pac/update.log | grep Check | grep -o -E [0-9]+-[0-9]+-.*)
   last_t=\$(date -d "\$last" +%s)
-  #now=\$(date -d "-1 hour" '+%Y-%m-%d %H:%M:%S')
-  now=\$(date -d "-1 min" '+%s')
+  #now=\$(date -d "-1 day" '+%Y-%m-%d %H:%M:%S')
+  now=\$(date -d "-1 day" '+%s')
   if [[ \$last_t -lt \$now ]]; then
     /pac/update_gfwlist.sh > /dev/null 2>&1 &
   fi
