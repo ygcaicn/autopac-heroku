@@ -47,7 +47,7 @@ EOF
 
 chmod +x /pac/update_gfwlist.sh
 /pac/update_gfwlist.sh
-echo "0 0 * * * bash /pac/update_gfwlist.sh > /dev/null 2>&1" > /etc/crontabs/root
+echo "* * * * * bash /pac/update_gfwlist.sh > /dev/null 2>&1" >> /etc/crontabs/root
 
 cat <<-EOF > /pac/cgi.sh
 #! /bin/bash
